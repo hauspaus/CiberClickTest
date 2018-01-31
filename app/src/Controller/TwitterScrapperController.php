@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Service\RequestService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 class TwitterScrapperController extends Controller
@@ -56,11 +55,11 @@ class TwitterScrapperController extends Controller
         foreach ($peopleToFollow as $userId) {
             $this->requestService->post(
                 'https://api.twitter.com/1.1/friendships/create.json',
-                ['user_id' =>  $userId]
+                ['user_id' => $userId]
             );
         }
 
-        return $this->json($response);
-//        return $this->render('peopleToFollowOnTwitter.html.twig', ['people' => $peopleToFollow]);
+//        return $this->json($response);
+        return $this->render('peopleToFollowOnTwitter.html.twig', ['people' => $peopleToFollow]);
     }
 }
