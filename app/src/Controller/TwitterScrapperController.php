@@ -7,7 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class TwitterScrapperController extends Controller
 {
@@ -27,7 +26,6 @@ class TwitterScrapperController extends Controller
      */
     public function index(Request $request)
     {
-        //      $endpoint = "https://api.twitter.com/1.1/users/show.json?screen_name=PauCyberClick";
 
         $peopleInTwitter = [];
 
@@ -37,23 +35,17 @@ class TwitterScrapperController extends Controller
 
         $names = explode(',', $names);
 
-
         if (count($names) < 2) throw new Exception("You must give at least 2 twitter users");
 
         foreach ($names as $name) {
             $friendsList = $this->requestService->get(
-                'https://api.twitter.com/1.1/followers/list.json',
-                'GET',
-                'screen_name=' . $name
+                'https://api.twitter.com/1.1/followers/ids.json',
+                '?stringify_id=true&screen_name=' . $name
             );
-            $friendsList = json_decode($friendsList);
-//            var_dump($friendsList);die();
-            $followersIds = array_map(function ($a) {
-                return $a->id;
-            }, $friendsList->users);
+            $followersIds = json_decode($friendsList);
 
             foreach ($followersIds as $userId) {
-                if (in_array($userId, $peopleInTwitter)) {
+                if ($userId != '0' && in_array($userId, $peopleInTwitter)) {
                     array_push($peopleToFollow, $userId);
                 } else {
                     array_push($peopleInTwitter, $userId);
@@ -61,14 +53,15 @@ class TwitterScrapperController extends Controller
             }
         }
 
-        echo("peopleInTwitter");
-        var_dump($peopleInTwitter);
-        echo("peopleToFollow");
-        var_dump($peopleToFollow);
-        die();
+        foreach ($peopleToFollow as $person) {
+            $this->requestService->post(
+                'https://api.twitter.com/1.1/friendships/create.json',
+                ['user_id' =>  $person]
 
+            );
+        }
 
-        return $this->render('peopleToFollowOnTwitter.html.twig',array('people' => $peopleToFollow));
+        return $this->render('peopleToFollowOnTwitter.html.twig', array('people' => $peopleToFollow));
 
     }
 }
