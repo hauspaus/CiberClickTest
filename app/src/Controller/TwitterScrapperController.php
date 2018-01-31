@@ -35,7 +35,9 @@ class TwitterScrapperController extends Controller
 
         $names = explode(',', $names);
 
-        if (count($names) < 2) throw new Exception("You must give at least 2 twitter users");
+        if (count($names) < 2) {
+            return $this->render('peopleToFollowOnTwitter-error.html.twig');
+        }
 
         foreach ($names as $name) {
             $friendsList = $this->requestService->get(

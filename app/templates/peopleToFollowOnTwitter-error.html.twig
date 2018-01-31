@@ -6,15 +6,8 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-<h1>This is the list of people ids that the specified users have in common</h1>
-<h2> there are a total of {{ people|length }} contacts in common</h2>
-{%for person in people%}
-    {{ person }}
-    <br/>
-{%endfor%}
+<h1>An error has occurred, check the following issues and try again</h1>
 
-
-<br/>
 <p>you must add a list of names in the ULR as follows</p>
 <p>/twitterscrapper?names=@name1,@name2,...</p>
 </body>
