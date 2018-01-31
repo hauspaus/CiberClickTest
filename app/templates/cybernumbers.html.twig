@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CyberNumbers!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+{%for num in numbers%}
+    {{ num }}
+    <br/>
+{%endfor%}
+
+</body>
+</html>

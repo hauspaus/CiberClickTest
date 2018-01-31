@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}FollowMe!{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+{%for person in people%}
+    {{ person }}
+    <br/>
+{%endfor%}
+
+</body>
+</html>
