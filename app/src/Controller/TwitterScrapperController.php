@@ -26,9 +26,7 @@ class TwitterScrapperController extends Controller
      */
     public function index(Request $request)
     {
-
         $peopleInTwitter = [];
-
         $peopleToFollow = [];
 
         $names = $request->query->get('names');
@@ -40,30 +38,29 @@ class TwitterScrapperController extends Controller
         }
 
         foreach ($names as $name) {
-            $friendsList = $this->requestService->get(
+            $response = $this->requestService->get(
                 'https://api.twitter.com/1.1/followers/ids.json',
-                '?stringify_id=true&screen_name=' . $name
+                '?screen_name=' . $name
             );
-            $followersIds = json_decode($friendsList);
+            $response = json_decode($response);
 
-            foreach ($followersIds as $userId) {
-                if ($userId != '0' && in_array($userId, $peopleInTwitter)) {
-                    array_push($peopleToFollow, $userId);
+            foreach ($response->ids as $userId) {
+                if (in_array($userId, $peopleInTwitter)) {
+                    $peopleToFollow[] = $userId;
                 } else {
-                    array_push($peopleInTwitter, $userId);
+                    $peopleInTwitter[] = $userId;
                 }
             }
         }
 
-        foreach ($peopleToFollow as $person) {
+        foreach ($peopleToFollow as $userId) {
             $this->requestService->post(
                 'https://api.twitter.com/1.1/friendships/create.json',
-                ['user_id' =>  $person]
-
+                ['user_id' =>  $userId]
             );
         }
 
-        return $this->render('peopleToFollowOnTwitter.html.twig', array('people' => $peopleToFollow));
-
+        return $this->json($response);
+//        return $this->render('peopleToFollowOnTwitter.html.twig', ['people' => $peopleToFollow]);
     }
 }

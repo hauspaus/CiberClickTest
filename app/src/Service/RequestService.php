@@ -43,7 +43,6 @@ class RequestService
             ->performRequest();
 
         return $response;
-
     }
 
     public function post($url, $postfields)
