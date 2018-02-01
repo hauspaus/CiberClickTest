@@ -26,7 +26,7 @@ class RequestService
      */
     public function __construct()
     {
-        $this->twitterService = new TwitterAPIExchange($this->settings);
+
     }
 
     /**
@@ -36,7 +36,9 @@ class RequestService
      */
     public function get($url, $getfield)
     {
-        return $this->twitterService->setGetfield($getfield)
+        $twitterService = new TwitterAPIExchange($this->settings);
+
+        return $twitterService->setGetfield($getfield)
             ->buildOauth($url, 'GET')
             ->performRequest();
     }
@@ -48,7 +50,9 @@ class RequestService
      */
     public function post($url, $postfields)
     {
-        return $this->twitterService->buildOauth($url, 'POST')
+        $twitterService = new TwitterAPIExchange($this->settings);
+
+        return $twitterService->buildOauth($url, 'POST')
             ->setPostfields($postfields)
             ->performRequest();
     }
