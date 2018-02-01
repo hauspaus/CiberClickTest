@@ -4,8 +4,13 @@ namespace App\Service;
 
 use TwitterAPIExchange;
 
-class RequestService
+class TwitterService
 {
+    /**
+     * @var TwitterAPIExchange
+     */
+    protected $twitterService;
+
     /**
      * @var array
      */
@@ -17,11 +22,6 @@ class RequestService
     ];
 
     /**
-     * @var TwitterAPIExchange
-     */
-    protected $twitterService;
-
-    /**
      * RequestService constructor.
      */
     public function __construct()
@@ -30,26 +30,32 @@ class RequestService
     }
 
     /**
+     * Get request.
+     *
      * @param string $url
-     * @param string $getfield
+     * @param string $getField
      * @return string
      */
-    public function get($url, $getfield)
+    public function get($url, $getField)
     {
-        return $this->twitterService->setGetfield($getfield)
+        return $this->twitterService
             ->buildOauth($url, 'GET')
+            ->setGetfield($getField)
             ->performRequest();
     }
 
     /**
+     * Post request.
+     *
      * @param string $url
-     * @param array $postfields
+     * @param array $postFields
      * @return string
      */
-    public function post($url, $postfields)
+    public function post($url, $postFields)
     {
         return $this->twitterService->buildOauth($url, 'POST')
-            ->setPostfields($postfields)
+            ->setGetfield()
+            ->setPostfields($postFields)
             ->performRequest();
     }
 }
